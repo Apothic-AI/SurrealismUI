@@ -25,7 +25,7 @@ import { SCard } from "../card/index.slint";
 import { SIcon } from "../icon/index.slint";
 import {ROOT-STYLES,DefaultSMenuProps} from "../../themes/index.slint";
 import { STip } from "../tip/index.slint";
-import { Themes,UseIcons,BorderType,MenuData } from "../../use/index.slint";
+import { Themes,UseIcons,UseSurrealismFn,ColorLevel,BorderType,MenuData } from "../../use/index.slint";
 import { SPopup } from "../popup/index.slint";
 import { GridBox } from "std-widgets.slint";
 
@@ -37,6 +37,7 @@ component MenuItem inherits Rectangle {
   in property <Themes> theme;
   in property <bool> active;
   in property <brush> active-color : ROOT-STYLES.radio-active;
+  in property <brush> inactive-color;
   out property <bool> has-hover <=> area.has-hover;
   states [
     hover when area.has-hover:{icon.colorize : hover-icon-color;}
@@ -64,7 +65,7 @@ component MenuItem inherits Rectangle {
     drop-shadow-offset-y: 0;
   }
   icon:=SIcon {
-    colorize: active?root.active-color:self.get-colorize();
+    colorize: active?root.active-color:root.inactive-color;
     theme: root.theme; 
     height:root.icon-size;
     width: root.icon-size;
@@ -79,6 +80,7 @@ export component Menu inherits SCard {
   clip: false;
   theme: DefaultSMenuProps.theme;
   in property <brush> active-color : DefaultSMenuProps.active-color;
+  in property <brush> inactive-icon-color : UseSurrealismFn.get-color(self.theme , ColorLevel.Font);
   in property <length> tip-width : DefaultSMenuProps.tip-width;
   in-out property <length> icon-box-size : DefaultSMenuProps.icon-box-size;
   in-out property <length> icon-size : DefaultSMenuProps.icon-size ;
@@ -113,6 +115,7 @@ export component Menu inherits SCard {
           visible: (top-view.height / icon-box-size) > index;
           hover-icon-color: root.active-color;
           active-color: root.active-color;
+          inactive-color: root.inactive-icon-color;
           active: item.id == root.active;
           height: icon-box-size;
           icon: item.icon;
@@ -172,6 +175,7 @@ export component Menu inherits SCard {
         sub-menu-item:=MenuItem{
           hover-icon-color: root.active-color;
           active-color: root.active-color;
+          inactive-color: root.inactive-icon-color;
           active: item.id == root.active;
           height: icon-box-size;
           icon: item.icon;
