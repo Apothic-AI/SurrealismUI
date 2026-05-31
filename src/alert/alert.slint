@@ -36,7 +36,7 @@
 import { SCard } from "../card/index.slint";
 import { SText } from "../text/index.slint";
 import { SIcon } from "../icon/index.slint";
-import { DefaultSAlertProps } from "../../themes/index.slint";
+import { ROOT_STYLES, DefaultSAlertProps } from "../../themes/index.slint";
 import { Themes,ResultType,UseIcons } from "../../use/index.slint";
 export component Alert inherits Rectangle{
   height: 100%;
@@ -57,8 +57,18 @@ export component Alert inherits Rectangle{
   in-out property <ResultType> result-type: DefaultSAlertProps.result-type;
   in property <image> close-icon : DefaultSAlertProps.close-icon;
   in property <length> icon-size : DefaultSAlertProps.icon-size;
+  in property <bool> custom-card-style: false;
+  in property <brush> card-background: ROOT_STYLES.sur-theme-colors.success.normal;
+  in property <brush> card-border-color: ROOT_STYLES.sur-theme-colors.success.normal;
+  in property <brush> card-shadow-color: ROOT_STYLES.sur-theme-colors.success.deepest;
+  in property <length> card-border-width: 2px;
+  in property <length> card-border-radius: 4px;
+  in property <brush> icon-color: root.font-color;
   private property <Themes> theme : Success;
   private property <image> icon : UseIcons.icons.Success;
+  private property <brush> resolved-card-background: ROOT_STYLES.sur-theme-colors.success.normal;
+  private property <brush> resolved-card-border-color: ROOT_STYLES.sur-theme-colors.success.normal;
+  private property <brush> resolved-card-shadow-color: ROOT_STYLES.sur-theme-colors.success.deepest;
   public function open() {
       root.is-show = true;
   }
@@ -100,26 +110,44 @@ export component Alert inherits Rectangle{
     primary when result-type==ResultType.Primary: {
       root.theme : Themes.Primary;
       root.icon : UseIcons.icons.Smiling-face;
+      root.resolved-card-background: ROOT_STYLES.sur-theme-colors.primary.normal;
+      root.resolved-card-border-color: ROOT_STYLES.sur-theme-colors.primary.normal;
+      root.resolved-card-shadow-color: ROOT_STYLES.sur-theme-colors.primary.deepest;
     }
     success when result-type==ResultType.Success: {
       root.theme : Themes.Success;
       root.icon : UseIcons.icons.Success;
+      root.resolved-card-background: ROOT_STYLES.sur-theme-colors.success.normal;
+      root.resolved-card-border-color: ROOT_STYLES.sur-theme-colors.success.normal;
+      root.resolved-card-shadow-color: ROOT_STYLES.sur-theme-colors.success.deepest;
     }
     info when result-type==ResultType.Info: {
       root.theme : Themes.Info;
       root.icon : UseIcons.icons.Info;
+      root.resolved-card-background: ROOT_STYLES.sur-theme-colors.info.normal;
+      root.resolved-card-border-color: ROOT_STYLES.sur-theme-colors.info.normal;
+      root.resolved-card-shadow-color: ROOT_STYLES.sur-theme-colors.info.deepest;
     }
     warning when result-type==ResultType.Warning: {
       root.theme : Themes.Warning;
       root.icon : UseIcons.icons.Attention;
+      root.resolved-card-background: ROOT_STYLES.sur-theme-colors.warning.normal;
+      root.resolved-card-border-color: ROOT_STYLES.sur-theme-colors.warning.normal;
+      root.resolved-card-shadow-color: ROOT_STYLES.sur-theme-colors.warning.deepest;
     }
     error when result-type==ResultType.Error: {
       root.theme : Themes.Error;
       root.icon : UseIcons.icons.Close-one;
+      root.resolved-card-background: ROOT_STYLES.sur-theme-colors.error.normal;
+      root.resolved-card-border-color: ROOT_STYLES.sur-theme-colors.error.normal;
+      root.resolved-card-shadow-color: ROOT_STYLES.sur-theme-colors.error.deepest;
     }
     help when result-type==ResultType.Help: {
       root.theme : Themes.Light;
       root.icon : UseIcons.icons.Help;
+      root.resolved-card-background: ROOT_STYLES.sur-theme-colors.light.normal;
+      root.resolved-card-border-color: ROOT_STYLES.sur-theme-colors.light.normal;
+      root.resolved-card-shadow-color: ROOT_STYLES.sur-theme-colors.light.deepest;
     }
   ]
   alert:=SCard { 
@@ -128,6 +156,11 @@ export component Alert inherits Rectangle{
     card-width: parent.width * 0.8;
     card-height: root.alert-height;
     theme: root.theme;
+    background: root.custom-card-style ? root.card-background : root.resolved-card-background;
+    border-color: root.custom-card-style ? root.card-border-color : root.resolved-card-border-color;
+    drop-shadow-color: root.custom-card-style ? root.card-shadow-color : root.resolved-card-shadow-color;
+    border-width: root.custom-card-style ? root.card-border-width : 2px;
+    border-radius: root.custom-card-style ? root.card-border-radius : 4px;
     layuot := HorizontalLayout {
       padding-left: root.spacing;
       spacing: root.spacing;
@@ -136,7 +169,7 @@ export component Alert inherits Rectangle{
         width: type-icon.width;
         type-icon:=SIcon {
           theme: root.theme;
-          colorize: self.get-colorize();
+          colorize: root.custom-card-style ? root.icon-color : self.get-colorize();
           source: root.icon;
           height: root.icon-size;
           width: root.icon-size;
@@ -155,7 +188,7 @@ export component Alert inherits Rectangle{
         width: close-icon.width;
         close-icon:=SIcon {
           theme: root.theme;
-          colorize: self.get-colorize();
+          colorize: root.custom-card-style ? root.icon-color : self.get-colorize();
           source: root.close-icon;
           height: root.icon-size;
           width: root.icon-size;
