@@ -62,6 +62,22 @@ export component CollapseItem inherits Rectangle{
   in-out property <BorderType> details-border-type : DefaultSCollapseProps.details-border-type;
   in-out property <bool> is-show : DefaultSCollapseProps.is-show;
   in-out property <image> collapse-icon : DefaultSCollapseProps.collapse-icon;
+  in property <bool> custom-card-style: false;
+  in property <brush> header-background: ROOT_STYLES.sur-theme-colors.dark.normal;
+  in property <brush> header-border-color: ROOT_STYLES.sur-theme-colors.dark.normal;
+  in property <length> header-border-width: 0px;
+  in property <length> header-border-radius: 0px;
+  in property <brush> title-color: ROOT_STYLES.sur-theme-colors.dark.font;
+  in property <brush> icon-color: root.title-color;
+  in property <brush> details-background: ROOT_STYLES.sur-theme-colors.dark.normal;
+  in property <brush> details-border-color: ROOT_STYLES.sur-theme-colors.dark.normal;
+  in property <length> details-border-width: 0px;
+  in property <length> details-border-radius: 0px;
+  private property <brush> resolved-header-background: ROOT-STYLES.sur-theme-colors.dark.normal;
+  private property <brush> resolved-header-border-color: ROOT-STYLES.sur-theme-colors.dark.normal;
+  private property <brush> resolved-details-background: ROOT-STYLES.sur-theme-colors.dark.normal;
+  private property <brush> resolved-details-border-color: ROOT-STYLES.sur-theme-colors.dark.normal;
+  private property <brush> resolved-title-color: ROOT-STYLES.sur-theme-colors.dark.font;
   pure public function get-height()->length {
       header.height
   }
@@ -69,6 +85,57 @@ export component CollapseItem inherits Rectangle{
   // init => {
   //   details-view.height = 0;
   // }
+  states [
+    light when theme == Themes.Light: {
+      root.resolved-header-background: ROOT-STYLES.sur-theme-colors.light.normal;
+      root.resolved-header-border-color: ROOT-STYLES.sur-theme-colors.light.normal;
+      root.resolved-details-background: ROOT-STYLES.sur-theme-colors.light.normal;
+      root.resolved-details-border-color: ROOT-STYLES.sur-theme-colors.light.normal;
+      root.resolved-title-color: ROOT-STYLES.sur-theme-colors.light.font;
+    }
+    primary when theme == Themes.Primary: {
+      root.resolved-header-background: ROOT-STYLES.sur-theme-colors.primary.normal;
+      root.resolved-header-border-color: ROOT-STYLES.sur-theme-colors.primary.normal;
+      root.resolved-details-background: ROOT-STYLES.sur-theme-colors.primary.normal;
+      root.resolved-details-border-color: ROOT-STYLES.sur-theme-colors.primary.normal;
+      root.resolved-title-color: ROOT-STYLES.sur-theme-colors.primary.font;
+    }
+    success when theme == Themes.Success: {
+      root.resolved-header-background: ROOT-STYLES.sur-theme-colors.success.normal;
+      root.resolved-header-border-color: ROOT-STYLES.sur-theme-colors.success.normal;
+      root.resolved-details-background: ROOT-STYLES.sur-theme-colors.success.normal;
+      root.resolved-details-border-color: ROOT-STYLES.sur-theme-colors.success.normal;
+      root.resolved-title-color: ROOT-STYLES.sur-theme-colors.success.font;
+    }
+    info when theme == Themes.Info: {
+      root.resolved-header-background: ROOT-STYLES.sur-theme-colors.info.normal;
+      root.resolved-header-border-color: ROOT-STYLES.sur-theme-colors.info.normal;
+      root.resolved-details-background: ROOT-STYLES.sur-theme-colors.info.normal;
+      root.resolved-details-border-color: ROOT-STYLES.sur-theme-colors.info.normal;
+      root.resolved-title-color: ROOT-STYLES.sur-theme-colors.info.font;
+    }
+    warning when theme == Themes.Warning: {
+      root.resolved-header-background: ROOT-STYLES.sur-theme-colors.warning.normal;
+      root.resolved-header-border-color: ROOT-STYLES.sur-theme-colors.warning.normal;
+      root.resolved-details-background: ROOT-STYLES.sur-theme-colors.warning.normal;
+      root.resolved-details-border-color: ROOT-STYLES.sur-theme-colors.warning.normal;
+      root.resolved-title-color: ROOT-STYLES.sur-theme-colors.warning.font;
+    }
+    error when theme == Themes.Error: {
+      root.resolved-header-background: ROOT-STYLES.sur-theme-colors.error.normal;
+      root.resolved-header-border-color: ROOT-STYLES.sur-theme-colors.error.normal;
+      root.resolved-details-background: ROOT-STYLES.sur-theme-colors.error.normal;
+      root.resolved-details-border-color: ROOT-STYLES.sur-theme-colors.error.normal;
+      root.resolved-title-color: ROOT-STYLES.sur-theme-colors.error.font;
+    }
+    dark when theme == Themes.Dark: {
+      root.resolved-header-background: ROOT-STYLES.sur-theme-colors.dark.normal;
+      root.resolved-header-border-color: ROOT-STYLES.sur-theme-colors.dark.normal;
+      root.resolved-details-background: ROOT-STYLES.sur-theme-colors.dark.normal;
+      root.resolved-details-border-color: ROOT-STYLES.sur-theme-colors.dark.normal;
+      root.resolved-title-color: ROOT-STYLES.sur-theme-colors.dark.font;
+    }
+  ]
   view:=VerticalLayout {
     height: root.height;
     width: header.width;
@@ -78,7 +145,13 @@ export component CollapseItem inherits Rectangle{
       theme: root.theme;
       width: root.width;
       card-height: root.header-height;
-      border-radius: 0;
+      background: root.custom-card-style ? root.header-background : root.resolved-header-background;
+      border-color: root.custom-card-style ? root.header-border-color : root.resolved-header-border-color;
+      border-width: root.custom-card-style ? root.header-border-width : self.card-border.border-width;
+      border-radius: root.custom-card-style ? root.header-border-radius : 0;
+      drop-shadow-blur: root.custom-card-style ? 0px : self.card-shadow.blur;
+      drop-shadow-offset-x: root.custom-card-style ? 0px : self.card-shadow.x;
+      drop-shadow-offset-y: root.custom-card-style ? 0px : self.card-shadow.y;
       padding-type: header-padding-type;
       border-type: header-border-type;
       shadow-type: header-shadow-type;
@@ -121,11 +194,12 @@ export component CollapseItem inherits Rectangle{
           font-family: root.font-family;
           font-italic: root.font-italic;
           font-size: root.font-size;
+          color: root.custom-card-style ? root.title-color : root.resolved-title-color;
         }
         icon-view:= Rectangle{
           width:icon.width ;
           icon:= SIcon { 
-            colorize: self.get-colorize();
+            colorize: root.custom-card-style ? root.icon-color : self.get-colorize();
             theme: root.theme;
             height: 16px;
             width: 16px;
@@ -150,7 +224,10 @@ export component CollapseItem inherits Rectangle{
       height: root.is-show ? root.height - header.height : 0;
       width: header.width;
       visible: root.is-show;
-      border-radius: 0;
+      background: root.custom-card-style ? root.details-background : root.resolved-details-background;
+      border-color: root.custom-card-style ? root.details-border-color : root.resolved-details-border-color;
+      border-width: root.custom-card-style ? root.details-border-width : self.card-border.border-width;
+      border-radius: root.custom-card-style ? root.details-border-radius : 0;
       drop-shadow-blur: 0;
       theme: root.theme;
       padding-type: details-padding-type;
