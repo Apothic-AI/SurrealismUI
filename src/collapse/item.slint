@@ -69,6 +69,8 @@ export component CollapseItem inherits Rectangle{
   in property <length> header-border-radius: 0px;
   in property <brush> title-color: ROOT_STYLES.sur-theme-colors.dark.font;
   in property <brush> icon-color: root.title-color;
+  in property <length> header-content-padding-left: 0px;
+  in property <length> header-content-padding-right: 0px;
   in property <brush> details-background: ROOT_STYLES.sur-theme-colors.dark.normal;
   in property <brush> details-border-color: ROOT_STYLES.sur-theme-colors.dark.normal;
   in property <length> details-border-width: 0px;
@@ -185,8 +187,8 @@ export component CollapseItem inherits Rectangle{
       HorizontalLayout {
         alignment: space-between;
         width: parent.width;
-        padding-left: parent.padding-left;
-        padding-right: parent.padding-right;
+        padding-left: parent.padding-left + root.header-content-padding-left;
+        padding-right: parent.padding-right + root.header-content-padding-right;
         title:=SText { 
           theme: root.theme;
           text: root.header-title;
