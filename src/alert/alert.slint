@@ -38,15 +38,9 @@ import { SText } from "../text/index.slint";
 import { SIcon } from "../icon/index.slint";
 import { DefaultSAlertProps } from "../../themes/index.slint";
 import { Themes,ResultType,UseIcons } from "../../use/index.slint";
-export component Alert inherits Window{
+export component Alert inherits Rectangle{
   height: 100%;
   width: 100%;
-  padding: 0;
-  padding-bottom: 0;
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
-  always-on-top:true;
   opacity: 1;
   visible: is-show;
   z: 1111;
@@ -64,6 +58,7 @@ export component Alert inherits Window{
   in property <image> close-icon : DefaultSAlertProps.close-icon;
   in property <length> icon-size : DefaultSAlertProps.icon-size;
   private property <Themes> theme : Success;
+  private property <image> icon : UseIcons.icons.Success;
   public function open() {
       root.is-show = true;
   }
